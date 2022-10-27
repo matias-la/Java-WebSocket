@@ -12,7 +12,15 @@ jobs:
         with:
           java-version: 1.8
       - name: Build
-        run: mvn -DskipTests package --file pom.xml && find . -name '*.aar'
+        run: mvn -DskipTests package --file pom.xml
+      # Upload libraries to workflow artifacts
+      - uses: actions/upload-artifact@v3
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          name: libraries
+          path: target/Java-WebSocket-1.5.3-SNAPSHOT.jar
+          if-no-files-found: error
+          retention-days: 5
 
   Test:
     runs-on: ubuntu-latest
